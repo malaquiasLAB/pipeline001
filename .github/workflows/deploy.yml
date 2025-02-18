@@ -15,7 +15,7 @@ jobs:
       - name: Read deploy.json
         id: read-json
         run: |
-          deploys=$(cat deploy.json)
+          deploys=$(cat deploy.json | jq .)
           echo "::set-output name=deploys::$deploys"
         shell: bash
 
