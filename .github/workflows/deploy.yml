@@ -17,13 +17,14 @@ jobs:
       - name: Read deploy.json
         id: read-json
         run: |
-          echo "DEPLOYS=$(cat deploy.json)" >> $GITHUB_OUTPUT
+          deploys=$(cat deploy.json)
+          echo "DEPLOYS=$deploys" >> $GITHUB_OUTPUT
           
         shell: bash
 
       - name: validacao output json
         run: |
-           echo $DEPLOYS #echo ${{ steps.read-json.outputs.DEPLOYS }}
+           echo ${{ steps.read-json.outputs.DEPLOYS }}
         shell: bash
 
 
