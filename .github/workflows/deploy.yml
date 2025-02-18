@@ -17,7 +17,7 @@ jobs:
         run: |
           deploys=$(cat deploy.json)
           echo $deploys > deploy
-          echo "::set-output name=DEPLOYS::$(cat deploy)"
+          echo "::set-output name=DEPLOYS::$(cat deploy | jq .)"
         shell: bash
 
       - name: validacao output json
