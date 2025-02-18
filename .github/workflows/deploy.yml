@@ -8,9 +8,8 @@ on:
 jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
-    env:
-      DEPLOYS: ${{ steps.read-json.outputs.DEPLOYS }}
-
+    # env:
+    #   DEPLOYS: ${{ steps.read-json.outputs.DEPLOYS }}
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -18,9 +17,8 @@ jobs:
       - name: Read deploy.json
         id: read-json
         run: |
-          deploys=$(cat deploy.json)
-          echo $deploys > deploy
-          echo "::set-output name=DEPLOYS::$(cat deploy | jq .)"
+          echo "DEPLOYS=$(cat deploy.json)" >> $GITHUB_OUTPUT
+          
         shell: bash
 
       - name: validacao output json
