@@ -15,8 +15,8 @@ jobs:
       - name: Read deploy.json
         id: read-json
         run: |
-          deploys=$(cat deploy.json | jq .)
-          echo "::set-output name=DEPLOYS::'$deploys'"
+          deploys=$(cat deploy.json)
+          echo "::set-output name=DEPLOYS::$deploys"
         shell: bash
 
       - name: validacao output json
