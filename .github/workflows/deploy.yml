@@ -8,6 +8,9 @@ on:
 jobs:
   trigger-deploy:
     runs-on: ubuntu-latest
+    env:
+      DEPLOYS: ${{ steps.read-json.outputs.DEPLOYS }}
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -22,7 +25,7 @@ jobs:
 
       - name: validacao output json
         run: |
-          echo ${{ steps.read-json.outputs.DEPLOYS }}
+           echo $DEPLOYS #echo ${{ steps.read-json.outputs.DEPLOYS }}
         shell: bash
 
 
