@@ -21,7 +21,7 @@ jobs:
 
       - name: validacao output json
         run: |
-          echo "deploys: ${{ steps.read-json.outputs.DEPLOYS }}"
+          echo ${{ steps.read-json.outputs.DEPLOYS }}
         shell: bash
 
 
