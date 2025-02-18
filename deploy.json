@@ -1,0 +1,22 @@
+[
+  {
+    "repo": "repositorio1",
+    "workflow": "deploy_release.yml",
+    "tag": "v1.0.0"
+  },
+  {
+    "repo": "repositorio2",
+    "workflow": "deploy_release.yml",
+    "tag": "v1.0.0"
+  },
+  {
+    "repo": "repositorio3",
+    "workflow": "deploy_release.yml",
+    "tag": "v1.0.0"
+  },
+  {
+    "repo": "repositorio4",
+    "workflow": "deploy_release.yml",
+    "tag": "v1.0.0"
+  }
+]

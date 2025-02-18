@@ -1,0 +1,30 @@
+name: Automated deployment
+
+on:
+  push:
+    branches:
+      - develop
+
+jobs:
+  trigger-deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2
+
+      - name: Read deploy.json
+        id: read-json
+        run: |
+          deploys=$(cat deploy.json)
+          echo "::set-output name=deploys::$deploys"
+        shell: bash
+
+      - name: validacao output json
+        run: |
+          echo "deploys: ${{ steps.read-json.outputs.deploys }}"
+        shell: bash
+
+
+          # DEPLOYS: ${{ steps.read-json.outputs.deploys }}
+          # environment: ${{ inputs.environment }}
+          # image-version: ${{ inputs.image-version }}
