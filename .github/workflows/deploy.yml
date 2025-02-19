@@ -42,13 +42,9 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-    - name: Trigger workflow repo1
-      run: |
-        curl -X POST -H "Accept: application/vnd.github.v3+json" -H "Accept: Authorization: token ${{ secrets.PAT }}" https://api.github.com/repos/malaquiasLAB/repo1/dispatches -d '{"event_type":"custom_event"}'
-
-    - name: Trigger workflow repo2
+    - name: Trigger workflow in another repository
       run: |
         curl -X POST -H "Accept: application/vnd.github.v3+json" \
         -H "Authorization: token ${{ secrets.PAT }}" \
-        https://api.github.com/repos/malaquiasLAB/repo2/dispatches \
-        -d '{"event_type":"custom_event"}'
+        https://api.github.com/repos/malaquiasLAB/repo1/actions/workflows/workflow.yml/dispatches \
+        -d '{"ref":"main"}'
