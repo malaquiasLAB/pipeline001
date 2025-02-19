@@ -1,33 +1,50 @@
-name: Automated deployment
+# name: Automated deployment
 
-on:
-  push:
-    branches:
-      - develop
+# on:
+#   push:
+#     branches:
+#       - develop
+
+# jobs:
+#   trigger-deploy:
+#     runs-on: ubuntu-latest
+#     # env:
+#     #   DEPLOYS: ${{ steps.read-json.outputs.DEPLOYS }}
+#     steps:
+#       - name: Checkout
+#         uses: actions/checkout@v2
+
+#       - name: Read deploy.json
+#         id: read-json
+#         run: |
+#           #deploys=$(cat deploy.json)
+#           echo "DEPLOYS=$(cat deploy.json | jq .)" >> $GITHUB_OUTPUT
+          
+#         shell: bash
+
+#       - name: validacao output json
+#         run: |
+#            echo ${{ steps.read-json.outputs.DEPLOYS }}
+#         shell: bash
+
+
+#           # DEPLOYS: ${{ steps.read-json.outputs.deploys }}
+#           # environment: ${{ inputs.environment }}
+#           # image-version: ${{ inputs.image-version }}
+
+
+name: Trigger Other Workflow
+
+on: [push]
 
 jobs:
-  trigger-deploy:
+  trigger:
     runs-on: ubuntu-latest
-    # env:
-    #   DEPLOYS: ${{ steps.read-json.outputs.DEPLOYS }}
+
     steps:
-      - name: Checkout
-        uses: actions/checkout@v2
-
-      - name: Read deploy.json
-        id: read-json
-        run: |
-          deploys=$(cat deploy.json)
-          echo "DEPLOYS=$deploys" >> $GITHUB_OUTPUT
-          
-        shell: bash
-
-      - name: validacao output json
-        run: |
-           echo ${{ steps.read-json.outputs.DEPLOYS }}
-        shell: bash
-
-
-          # DEPLOYS: ${{ steps.read-json.outputs.deploys }}
-          # environment: ${{ inputs.environment }}
-          # image-version: ${{ inputs.image-version }}
+    - name: Trigger workflow in another repository
+      run: |
+        curl -X POST -H "Accept: application/vnd.github.v3+json" \
+        -H "Authorization: token ${{ secrets.PAT }}" \
+        https://api.github.com/repos/malaquiasLAB/repo1/dispatches \
+        -d '{"event_type":"custom_event"}'
