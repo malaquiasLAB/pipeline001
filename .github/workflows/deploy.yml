@@ -63,6 +63,6 @@ jobs:
                  curl -X POST -H "Accept: application/vnd.github.v3+json" \
                  -H "Authorization: token ${{ secrets.PAT }}" \
                  https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/workflows/$WORKFLOW_FILE/dispatches \
-                 -d '{"ref":"$TAG"}'
+                 -d '{"ref":"'$TAG'"}'
             done
       shell: bash
