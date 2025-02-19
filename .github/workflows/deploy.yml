@@ -32,7 +32,7 @@ jobs:
                  -d '{"ref":"'$TAG'"}' > $REPOSITORY.log
 
                  if [ -s $REPOSITORY.log ]; then
-                   echo "Failed to trigger workflow $WORKFLOW_FILE for $REPOSITORY"
+                   echo "WARNNIG!!! Failed to trigger workflow $WORKFLOW_FILE for $REPOSITORY"
                  fi
             done
       shell: bash
