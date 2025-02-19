@@ -8,6 +8,12 @@
     "repository": "repo2",
     "workflow_file": "workflow.yml",
     "tag": "main"
+  },
+
+  {
+    "repository": "repo3",
+    "workflow_file": "workflow.yml",
+    "tag": "main"
   }
 
 ]
