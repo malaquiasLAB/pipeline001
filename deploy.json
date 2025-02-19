@@ -1,22 +1,13 @@
 [
   {
-    "repo": "repositorio1",
-    "workflow": "deploy_release.yml",
-    "tag": "v1.0.0"
+    "repository": "repo1",
+    "workflow_file": "workflow.yml",
+    "tag": "main"
   },
   {
-    "repo": "repositorio2",
-    "workflow": "deploy_release.yml",
-    "tag": "v1.0.0"
-  },
-  {
-    "repo": "repositorio3",
-    "workflow": "deploy_release.yml",
-    "tag": "v1.0.0"
-  },
-  {
-    "repo": "repositorio4",
-    "workflow": "deploy_release.yml",
-    "tag": "v1.0.0"
+    "repository": "repo2",
+    "workflow_file": "workflow.yml",
+    "tag": "main"
   }
+
 ]
