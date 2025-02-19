@@ -29,12 +29,9 @@ jobs:
                  curl -s -X POST -H "Accept: application/vnd.github.v3+json" \
                  -H "Authorization: token ${{ secrets.PAT }}" \
                  https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/workflows/$WORKFLOW_FILE/dispatches \
-                 -d '{"ref":"'$TAG'"}'
+                 -d '{"ref":"'$TAG'"}' > $REPOSITORY.log
 
-                 if [ $? -eq 0 ]; then
-                   echo "Workflow $WORKFLOW_FILE triggered successfully for $REPOSITORY"
-                 else
-                   echo "Failed to trigger workflow $WORKFLOW_FILE for $REPOSITORY"
-                 fi
+                 echo "validando log"
+                 cat $REPOSITORY.log
             done
       shell: bash
