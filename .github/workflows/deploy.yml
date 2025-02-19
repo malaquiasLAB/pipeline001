@@ -45,6 +45,9 @@ jobs:
     - name: Checkout
       uses: actions/checkout@v2
 
+    - name: list directory
+      run: ls -la
+
     - name: Trigger multiple workflows
       run: |
            for ROW in $(echo "${cat deploy.json}" | jq -r '.[] | @base64'); do
@@ -61,3 +64,4 @@ jobs:
                  https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/workflows/$WORKFLOW_FILE/dispatches \
                  -d '{"ref":"$TAG"}'
             done
+      shell: bash
