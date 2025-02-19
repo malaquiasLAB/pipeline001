@@ -1,56 +1,22 @@
-# name: Automated deployment
+name: Automated Deployment
 
-# on:
-#   push:
-#     branches:
-#       - develop
-
-# jobs:
-#   trigger-deploy:
-#     runs-on: ubuntu-latest
-#     # env:
-#     #   DEPLOYS: ${{ steps.read-json.outputs.DEPLOYS }}
-#     steps:
-#       - name: Checkout
-#         uses: actions/checkout@v2
-
-#       - name: Read deploy.json
-#         id: read-json
-#         run: |
-#           #deploys=$(cat deploy.json)
-#           echo "DEPLOYS=$(cat deploy.json | jq .)" >> $GITHUB_OUTPUT
-          
-#         shell: bash
-
-#       - name: validacao output json
-#         run: |
-#            echo ${{ steps.read-json.outputs.DEPLOYS }}
-#         shell: bash
-
-
-#           # DEPLOYS: ${{ steps.read-json.outputs.deploys }}
-#           # environment: ${{ inputs.environment }}
-#           # image-version: ${{ inputs.image-version }}
-
-
-name: Trigger Other Workflow
-
-on: [push]
+on:
+  push:
+    branches:
+      - develop
+      - main
 
 jobs:
-  trigger:
+  trigger_multiple_workflows:
     runs-on: ubuntu-latest
 
     steps:
     - name: Checkout
       uses: actions/checkout@v2
 
-    - name: list directory
-      run: ls -la
 
     - name: Trigger multiple workflows
       run: |
-           
            for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
                  _jq() {
                    echo ${ROW} | base64 --decode | jq -r ${1}
