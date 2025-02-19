@@ -31,7 +31,8 @@ jobs:
                  https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/workflows/$WORKFLOW_FILE/dispatches \
                  -d '{"ref":"'$TAG'"}' > $REPOSITORY.log
 
-                 echo "validando log"
-                 cat $REPOSITORY.log
+                 if [ -s $REPOSITORY.log ]; then
+                   echo "Failed to trigger workflow $WORKFLOW_FILE for $REPOSITORY"
+                 fi
             done
       shell: bash
