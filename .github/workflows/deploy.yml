@@ -54,12 +54,13 @@ jobs:
                   curl -s -X POST -H "Accept: application/vnd.github.v3+json" \
                   -H "Authorization: token ${{ secrets.PAT }}" \
                   https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/runs \
-                  -d '{"auto_approve":true}' > $REPOSITORY.log
+                  -d '{"auto_approve":true}' #> $REPOSITORY.log
   
-                  if [ -s $REPOSITORY.log ]; then
-                    echo "WARNIG!!! Failed to auto approve workflow for $REPOSITORY"
-                  else
-                      echo "INFO: Workflow for $REPOSITORY auto approved successfully"
-                  fi
+                  # if [ -s $REPOSITORY.log ]; then
+                  #   echo "WARNIG!!! Failed to auto approve workflow for $REPOSITORY"
+                  # else
+                  #     echo "INFO: Workflow for $REPOSITORY auto approved successfully"
+                  # fi
                 fi
             done
+      shell: bash
