@@ -37,6 +37,7 @@ jobs:
                     echo "INFO: Workflow $WORKFLOW_FILE for $REPOSITORY triggered successfully"
                  fi
             done
+            sleep 60
       shell: bash
 
     - name: Auto Approve
