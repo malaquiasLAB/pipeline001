@@ -40,28 +40,28 @@ jobs:
             sleep 60
       shell: bash
 
-    - name: Auto list wainting status workflows and auto approve the last one
+    - name: List waiting status workflows actions in repositories and auto approve the last one
       run: | 
-           for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
-             _jq() {
-               echo ${ROW} | base64 --decode | jq -r ${1}
-             }
-             
-             REPOSITORY=$(_jq '.repository')
-             WORKFLOW_FILE=$(_jq '.workflow_file')
-             
-             RUN_ID=$(curl -s -H "Accept: application/vnd.github.v3+json" \
-               -H "Authorization: token ${{ secrets.PAT }}" \
-               https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/runs \
-               | jq -r '.workflow_runs[] | select(.name == "'$WORKFLOW_FILE'") | .id' | head -n 1)
-             
-             if [ -n "$RUN_ID" ]; then
-               curl -s -X POST -H "Accept: application/vnd.github.v3+json" \
-                 -H "Authorization: token ${{ secrets.PAT }}" \
-                 https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/runs/$RUN_ID/approve
-               echo "INFO: Approved workflow run $RUN_ID for $REPOSITORY"
-             else
-               echo "WARNING: No workflow run found for $WORKFLOW_FILE in $REPOSITORY"
-             fi
-           done
+         for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
+         _jq() {
+           echo ${ROW} | base64 --decode | jq -r ${1}
+         }
+         
+         REPOSITORY=$(_jq '.repository')
+         WORKFLOW_FILE=$(_jq '.workflow_file')
+         
+         RUN_ID=$(curl -s -H "Accept: application/vnd.github.v3+json" \
+           -H "Authorization: token ${{ secrets.PAT }}" \
+           https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/runs \
+           | jq -r '.workflow_runs[] | select(.name == "'$WORKFLOW_FILE'") | select(.status == "waiting") | .id' | head -n 1)
+         
+         if [ -n "$RUN_ID" ]; then
+           curl -s -X POST -H "Accept: application/vnd.github.v3+json" \
+           -H "Authorization: token ${{ secrets.PAT }}" \
+           https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/runs/$RUN_ID/approve
+           echo "INFO: Approved workflow run $RUN_ID for $REPOSITORY"
+         else
+           echo "WARNING: No waiting workflow run found for $WORKFLOW_FILE in $REPOSITORY"
+         fi
+         done
       shell: bash
