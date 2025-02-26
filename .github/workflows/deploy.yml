@@ -37,7 +37,7 @@ jobs:
                     echo "INFO: Workflow $WORKFLOW_FILE for $REPOSITORY triggered successfully"
                  fi
             done
-            sleep 120
+            sleep 60
       shell: bash
 
     - name: List waiting status workflows actions in repositories and auto approve the last one
