@@ -40,49 +40,28 @@ jobs:
             sleep 60
       shell: bash
 
-    - name: Auto Approve
-      run: |
-           
-            # Inputs
-            ENVIRONMENT_ALLOW_LIST="dev"
-            ACTOR_ALLOW_LIST="alexandremalaquias"
-            GITHUB_TOKEN=${{ secrets.PAT }}
-            
-            # Get the event payload
-            EVENT_PAYLOAD=$(jq . < "$GITHUB_EVENT_PATH")
-            
-            # Extract necessary information from the payload
-            ACTOR=$(echo "$EVENT_PAYLOAD" | jq -r .sender.login)
-            EVENT_NAME=$(echo "$EVENT_PAYLOAD" | jq -r .event_name)
-            DEPLOYMENT_ID=$(echo "$EVENT_PAYLOAD" | jq -r .deployment.id)
-            ENVIRONMENT=$(echo "$EVENT_PAYLOAD" | jq -r .deployment.environment)
-            REPO_OWNER=$(echo "$EVENT_PAYLOAD" | jq -r .repository.owner.login)
-            REPO_NAME=$(echo "$EVENT_PAYLOAD" | jq -r .repository.name)
-            
-            # Check if the event is a deployment event
-            if [ "$EVENT_NAME" != "deployment" ]; then
-              echo "This action only supports deployment events"
-              exit 1
-            fi
-            
-            # Check if the environment is in the allow list
-            if [[ ! ",$ENVIRONMENT_ALLOW_LIST," =~ ",$ENVIRONMENT," ]]; then
-              echo "Environment $ENVIRONMENT is not in the allow list"
-              exit 1
-            fi
-            
-            # Check if the actor is in the allow list
-            if [[ ! ",$ACTOR_ALLOW_LIST," =~ ",$ACTOR," ]]; then
-              echo "Actor $ACTOR is not in the allow list"
-              exit 1
-            fi
-            
-            # Approve the deployment
-            curl -X POST \
-              -H "Authorization: token $GITHUB_TOKEN" \
-              -H "Accept: application/vnd.github.v3+json" \
-              "https://api.github.com/repos/malaquiasLAB/repo1/deployments/$DEPLOYMENT_ID/statuses" \
-              -d '{"state": "success"}'
-            
-            echo "Deployment to $ENVIRONMENT approved by $ACTOR"
-                  shell: bash
+    - name: Auto list wainting status workflows and auto approve the last one
+      run: | 
+      for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
+        _jq() {
+          echo ${ROW} | base64 --decode | jq -r ${1}
+        }
+        
+        REPOSITORY=$(_jq '.repository')
+        WORKFLOW_FILE=$(_jq '.workflow_file')
+        
+        RUN_ID=$(curl -s -H "Accept: application/vnd.github.v3+json" \
+          -H "Authorization: token ${{ secrets.PAT }}" \
+          https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/runs \
+          | jq -r '.workflow_runs[] | select(.name == "'$WORKFLOW_FILE'") | .id' | head -n 1)
+        
+        if [ -n "$RUN_ID" ]; then
+          curl -s -X POST -H "Accept: application/vnd.github.v3+json" \
+            -H "Authorization: token ${{ secrets.PAT }}" \
+            https://api.github.com/repos/malaquiasLAB/$REPOSITORY/actions/runs/$RUN_ID/approve
+          echo "INFO: Approved workflow run $RUN_ID for $REPOSITORY"
+        else
+          echo "WARNING: No workflow run found for $WORKFLOW_FILE in $REPOSITORY"
+        fi
+      done
+    shell: bash
