@@ -36,6 +36,8 @@ jobs:
                              else
                                 echo "::notice ::INFO: Workflow $WORKFLOW_FILE for $REPOSITORY triggered successfully"
                              fi
+                      else
+                        echo "::error ::ERROR!!! Invalid workflow file expected here is deploy.yml"
                  fi
             done
             sleep 60
