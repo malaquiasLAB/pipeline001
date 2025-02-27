@@ -52,9 +52,9 @@ jobs:
             -d '{"environment_ids":['$ENVIRONMENT_ID'],"state":"approved","comment":"Auto aprovado pelo workflow automatizado!"}'
             
             done
-       shell: bash
+    #   shell: bash
 
-           # - name: Trigger multiple workflows
+    # - name: Trigger multiple workflows
     #   run: |
     #        for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
     #              _jq() {
