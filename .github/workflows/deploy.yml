@@ -48,9 +48,9 @@ jobs:
 
             LINE_COUNT=$(wc -l < $REPOSITORY_LOG.log)
             if [ $LINE_COUNT -gt 100 ]; then
-              echo ":: info ::INFO: Deployment for $REPOSITORY triggered successfully"
+              echo "::notice ::INFO: Deployment for $REPOSITORY triggered successfully"
             else
-              echo ":: error :: WARNING!!! Failed to trigger deployment for $REPOSITORY"
+              echo "::error ::WARNING!!! Failed to trigger deployment for $REPOSITORY"
             fi
             
             done
