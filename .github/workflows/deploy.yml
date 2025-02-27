@@ -50,7 +50,7 @@ jobs:
             if [ $LINE_COUNT -gt 100 ]; then
               echo "INFO: Deployment for $REPOSITORY triggered successfully"
             else
-              echo "WARNING!!! Failed to trigger deployment for $REPOSITORY"
+              echo "::error :: WARNING!!! Failed to trigger deployment for $REPOSITORY"
             fi
             
             done
