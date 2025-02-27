@@ -74,9 +74,9 @@ jobs:
 
             LINE_COUNT=$(wc -l < $REPOSITORY_LOG.log)
             if [ $LINE_COUNT -gt 100 ]; then
-              echo "::notice ::INFO: Deployment for $REPOSITORY triggered successfully"
+              echo "::notice ::INFO: Auto approve deployment workflow $WORKFLOW_FILE for $REPOSITORY successfully"
             else
-              echo "::error ::WARNING!!! Failed to trigger deployment for $REPOSITORY"
+              echo "::error ::WARNING!!! Failed to  auto approve deployment $WORKFLOW_FILE for $REPOSITORY"
             fi
             
             done
