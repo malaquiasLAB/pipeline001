@@ -40,6 +40,7 @@ jobs:
                         echo "::error ::ERROR!!! Invalid workflow file, workflow file expected here is deploy.yml"
                  fi
             done
+            rm -rf *.log
             sleep 60
       shell: bash
 
