@@ -2,11 +2,13 @@
   {
     "repository": "repo1",
     "workflow_file": "workflow.yml",
-    "tag": "main"
+    "branch": "main",
+    "environment": "dev"
   },
   {
     "repository": "repo2",
     "workflow_file": "workflow.yml",
-    "tag": "main"
+    "branch": "main",
+    "environment": "dev"
   }
 ]
