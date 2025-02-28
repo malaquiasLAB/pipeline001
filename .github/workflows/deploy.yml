@@ -46,45 +46,45 @@ jobs:
 
     - name: Automatic Deployment Approval
       run: |
-           for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
-            jq() {
-             echo ${ROW} | base64 --decode | jq -r ${1}
-            
-            
-            REPOSITORY=$(_jq '.repository')
-            WORKFLOW_FILE=$(_jq '.workflow_file')
-            BRANCH=$(_jq '.branch')
-            ENVIRONMENT=$(_jq '.environment')
-            REPOSITORY_LOG=$(echo $REPOSITORY | awk -F'/' '{print $2}')
+         for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
+          _jq() {
+            echo ${ROW} | base64 --decode | jq -r ${1}
+          }
 
-                if [ $WORKFLOW_FILE = "workflow.yml" ] || [ $WORKFLOW_FILE = "build_release.yml" ]; then
-                   # get run_id
-                   RUN_ID=$(curl -s -L -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.PAT }}" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/$REPOSITORY/actions/runs?branch=$BRANCH | jq '.workflow_runs| map(select(.status == "waiting" and .head_branch == "'$BRANCH'" and .path == ".github/workflows/'$WORKFLOW_FILE'" ))' | jq .[0] | jq .id)
-                   
-                   # get environment_ids
-                   ENVIRONMENT_ID=$(curl -s -L \
-                   -H "Accept: application/vnd.github.v3+json" \
-                   -H "Authorization: token ${{ secrets.PAT }}" \
-                   https://api.github.com/repos/$REPOSITORY/environments | \
-                   jq '.environments| map (select (.name == "'$ENVIRONMENT'"))'| \
-                   jq .[] | jq .id )
-                   
-                   # triger approve deployment
-                   curl -s -L -X POST \
-                   -H "Accept: application/vnd.github+json" \
-                   -H "Authorization: token ${{ secrets.PAT }}" \
-                   -H "X-GitHub-Api-Version: 2022-11-28" \
-                   https://api.github.com/repos/$REPOSITORY/actions/runs/$RUN_ID/pending_deployments \
-                   -d '{"environment_ids":['$ENVIRONMENT_ID'],"state":"approved","comment":"Auto aprovado pelo workflow automatizado!"}' > $REPOSITORY_LOG.log
+          REPOSITORY=$(_jq '.repository')
+          WORKFLOW_FILE=$(_jq '.workflow_file')
+          BRANCH=$(_jq '.branch')
+          ENVIRONMENT=$(_jq '.environment')
+          REPOSITORY_LOG=$(echo $REPOSITORY | awk -F'/' '{print $2}')
+
+          if [ $WORKFLOW_FILE = "workflow.yml" ] || [ $WORKFLOW_FILE = "build_release.yml" ]; then
+             # get run_id
+             RUN_ID=$(curl -s -L -H "Accept: application/vnd.github+json" -H "Authorization: token ${{ secrets.PAT }}" -H "X-GitHub-Api-Version: 2022-11-28" https://api.github.com/repos/$REPOSITORY/actions/runs?branch=$BRANCH | jq '.workflow_runs | map(select(.status == "waiting" and .head_branch == "'$BRANCH'" and .path == ".github/workflows/'$WORKFLOW_FILE'"))' | jq .[0] | jq .id)
+             
+             # get environment_ids
+             ENVIRONMENT_ID=$(curl -s -L \
+             -H "Accept: application/vnd.github.v3+json" \
+             -H "Authorization: token ${{ secrets.PAT }}" \
+             https://api.github.com/repos/$REPOSITORY/environments | \
+             jq '.environments | map(select(.name == "'$ENVIRONMENT'"))' | \
+             jq .[] | jq .id)
+             
+             # trigger approve deployment
+             curl -s -L -X POST \
+             -H "Accept: application/vnd.github+json" \
+             -H "Authorization: token ${{ secrets.PAT }}" \
+             -H "X-GitHub-Api-Version: 2022-11-28" \
+             https://api.github.com/repos/$REPOSITORY/actions/runs/$RUN_ID/pending_deployments \
+             -d '{"environment_ids":['$ENVIRONMENT_ID'],"state":"approved","comment":"Auto aprovado pelo workflow automatizado!"}' > $REPOSITORY_LOG.log
      
-                      LINE_COUNT=$(wc -l < $REPOSITORY_LOG.log)
-                      if [ $LINE_COUNT -gt 100 ]; then
-                          echo "::notice ::INFO: Auto approve deployment workflow $WORKFLOW_FILE for $REPOSITORY successfully"
-                        else
-                          echo "::error ::WARNING!!! Failed to  auto approve deployment $WORKFLOW_FILE for $REPOSITORY"
-                      fi
-                else
-                  echo "::error ::ERROR!!! Invalid workflow file, workflow file expected here is deploy.yml or build_release.yml"
-                fi
-            #done
+              LINE_COUNT=$(wc -l < $REPOSITORY_LOG.log)
+              if [ $LINE_COUNT -gt 100 ]; then
+                echo "::notice ::INFO: Auto approve deployment workflow $WORKFLOW_FILE for $REPOSITORY successfully"
+              else
+                echo "::error ::WARNING!!! Failed to auto approve deployment $WORKFLOW_FILE for $REPOSITORY"
+              fi
+          else
+            echo "::error ::ERROR!!! Invalid workflow file, workflow file expected here is deploy.yml or build_release.yml"
+          fi
+        done
       shell: bash
