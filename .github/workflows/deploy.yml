@@ -86,5 +86,5 @@ jobs:
                 else
                   echo "::error ::ERROR!!! Invalid workflow file, workflow file expected here is deploy.yml or build_release.yml"
                 fi
-           done
+            #done
       shell: bash
