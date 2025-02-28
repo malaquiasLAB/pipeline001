@@ -7,7 +7,7 @@
   },
   {
     "repository": "malaquiasLAB/repo2",
-    "workflow_file": "build_release.yml",
+    "workflow_file": "workflow.yml",
     "branch": "main",
     "environment": "dev"
   }

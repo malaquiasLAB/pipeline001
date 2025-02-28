@@ -44,8 +44,9 @@ jobs:
             sleep 60
       shell: bash
 
-    - name: Teste aprovacao automatica
-      run: | 
+    - name: Automatic Deployment Approval
+      run: |
+            if [ $WORKFLOW_FILE = "workflow.yml" ] || [ $WORKFLOW_FILE = "build_release.yml" ]; then
             for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
             _jq() {
               echo ${ROW} | base64 --decode | jq -r ${1}
@@ -81,6 +82,9 @@ jobs:
               echo "::notice ::INFO: Auto approve deployment workflow $WORKFLOW_FILE for $REPOSITORY successfully"
             else
               echo "::error ::WARNING!!! Failed to  auto approve deployment $WORKFLOW_FILE for $REPOSITORY"
+            fi
+            else
+              echo "::error ::ERROR!!! Invalid workflow file, workflow file expected here is deploy.yml or build_release.yml"
             fi
             
             done
