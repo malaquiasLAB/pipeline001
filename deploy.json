@@ -1,13 +1,13 @@
 [
   {
     "repository": "malaquiasLAB/repo1",
-    "workflow_file": "workflow.yml",
+    "workflow_file": "deploy.yml",
     "branch": "main",
     "environment": "dev"
   },
   {
     "repository": "malaquiasLAB/repo2",
-    "workflow_file": "workflow.yml",
+    "workflow_file": "build_release.yml",
     "branch": "main",
     "environment": "dev"
   }
