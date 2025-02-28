@@ -41,7 +41,7 @@ jobs:
                  fi
             done
             rm -rf *.log
-            sleep 60
+            sleep 20
       shell: bash
 
     - name: Automatic Deployment Approval
