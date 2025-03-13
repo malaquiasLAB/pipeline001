@@ -11,19 +11,10 @@ jobs:
   trigger_multiple_workflows:
     runs-on: ubuntu-latest
 
-    # steps:
-    # - name: 🤖 Gerando token 🤖
-    #   uses: Bradesco-Actions/generate-token@v1
-    #   id: generate-token
-    #   with:
-    #     org: Bradesco-Next
-    #     app-id: ${{ vars.AUTHENTICATION_AND_AUTHORIZATION_APP_ID }}
-    #     app-private-key : ${{ secrets.AUTHENTICATION_AND_AUTHORIZATION_PRIVATE_KEY }}
-
+    steps:
     - name: Checkout
       uses: actions/checkout@v2
-      # with:
-      #   token: ${{ secrets.PAT }}
+
 
     - name: Trigger multiple workflows
       run: |
@@ -64,16 +55,8 @@ jobs:
   trigger_multiple_approve_workflows:
     runs-on: Ubuntu-latest
     needs: trigger_multiple_workflows
-    
-    # steps:
-    # - name: 🤖 Gerando token 🤖
-    #   uses: Bradesco-Actions/generate-token@v1
-    #   id: generate-token
-    #   with:
-    #     org: Bradesco-Next
-    #     app-id: ${{ vars.AUTHENTICATION_AND_AUTHORIZATION_APP_ID }}
-    #     app-private-key : ${{ secrets.AUTHENTICATION_AND_AUTHORIZATION_PRIVATE_KEY }}
-
+  
+    steps:
     - name: Checkout
       uses: actions/checkout@v2
       with:
