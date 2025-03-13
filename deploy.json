@@ -1,14 +1,16 @@
 [
   {
     "repository": "malaquiasLAB/repo1",
+    "environment": "dev",
+    "image_version": "develop",
     "workflow_file": "deploy.yml",
-    "branch": "main",
-    "environment": "dev"
+    "trigger_with_approve": "TRUE"
   },
   {
     "repository": "malaquiasLAB/repo2",
-    "workflow_file": "build_release.yml",
-    "branch": "main",
-    "environment": "dev"
+    "environment": "dev",
+    "image_version": "develop",
+    "workflow_file": "deploy.yml",
+    "trigger_with_approve": "TRUE"
   }
 ]

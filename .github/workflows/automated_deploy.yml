@@ -1,10 +1,10 @@
 name: Automated Deployment
 
-on:
-  push:
-    branches:
-      - develop
-      - main
+# on:
+#   push:
+#     branches:
+#       - release/develop
+#       - main
 
 jobs:
   trigger_multiple_workflows:
