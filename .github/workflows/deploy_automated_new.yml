@@ -49,7 +49,7 @@ jobs:
             fi
            done
            rm -rf *.log
-           sleep 120
+           sleep 90
       shell: bash
 
   trigger_multiple_approve_workflows:

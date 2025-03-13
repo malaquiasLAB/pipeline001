@@ -51,7 +51,7 @@ for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
       fi
  }
                           
- if [ $WORKFLOW_FILE = "deploy.yml" ] && [ $TRIGGER_WITH_APPROVE = "TRUE"] ; then
+ if [ "$WORKFLOW_FILE" = "deploy.yml" ] && [ "$TRIGGER_WITH_APPROVE" = "TRUE"] ; then
    echo "inicio da execucao!"
    _workflow_trigger_approve
    echo
@@ -61,7 +61,7 @@ for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
    echo "::error ::ERROR!!! Invalid workflow file $WORKFLOW_FILE and variable $TRIGGER_WITH_APPROVE, workflow file expected here is deploy.yml and TRIGGER_WITH_APPROVE value TRUE" 
  fi
                     
- if [ $WORKFLOW_FILE = "release_deploy.yml" ] ; then
+ if [ "$WORKFLOW_FILE" = "release_deploy.yml" ] ; then
    echo "inicio da execucao!2"
    _workflow_trigger_approve
    echo
