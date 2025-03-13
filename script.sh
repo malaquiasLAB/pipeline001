@@ -20,7 +20,9 @@ for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
     https://api.github.com/repos/$REPOSITORY/actions/runs?branch=$BRANCH | \
     jq '.workflow_runs | map(select(.status == "waiting" and .head_branch == "'$BRANCH'" and .path == ".github/workflows/'$WORKFLOW_FILE'"))' | \
     jq .[0] | jq .id)
-                                 
+
+    echo $RUN_ID
+
     # get environment_ids
     ENVIRONMENT_ID=$(curl -s -L \
     -H "Accept: application/vnd.github.v3+json" \
@@ -28,6 +30,8 @@ for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
     https://api.github.com/repos/$REPOSITORY/environments | \
     jq '.environments | map(select(.name == "'$ENVIRONMENT'"))' | \
     jq .[] | jq .id)
+
+    echo $ENVIRONMENT_ID
     
     echo "## trigger approve deployment"
     curl -s -L -X POST \
