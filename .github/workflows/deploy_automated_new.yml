@@ -18,53 +18,69 @@ jobs:
 
     - name: Trigger multiple workflows
       run: |
-           for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
-            _jq() {
-              echo ${ROW} | base64 --decode | jq -r ${1}
-            }
-            REPOSITORY=$(_jq '.repository')
-            WORKFLOW_FILE=$(_jq '.workflow_file')
-            IMAGE_VERSION=$(_jq '.image_version')
-            ENVIRONMENT=$(_jq '.environment')
-            TRIGGER_WITH_APPROVE=$(_jq '.trigger_with_approve')
-            REPOSITORY_LOG=$(echo $REPOSITORY | awk -F'/' '{print $2}')
-            BRANCH="release/$IMAGE_VERSION"
+          PIPELINE_BRANCH=${GITHUB_REF##*/}
+          echo $PIPELINE_BRANCH
+          case "$PIPELINE_BRANCH" in
+            desenvolvimento)
+              ENVIRONMENT="th"
+              echo $ENVIRONMENT
+              ;;
+            producao)
+              ENVIRONMENT="pr"
+              echo $ENVIRONMENT
+          	;;
+            *)
+              echo "Running commands for other branches"
+              # Add your commands for other branches here
+              ;;
+          esac
+          #  for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
+          #   _jq() {
+          #     echo ${ROW} | base64 --decode | jq -r ${1}
+          #   }
+          #   REPOSITORY=$(_jq '.repository')
+          #   WORKFLOW_FILE=$(_jq '.workflow_file')
+          #   IMAGE_VERSION=$(_jq '.image_version')
+          #   ENVIRONMENT=$(_jq '.environment')
+          #   TRIGGER_WITH_APPROVE=$(_jq '.trigger_with_approve')
+          #   REPOSITORY_LOG=$(echo $REPOSITORY | awk -F'/' '{print $2}')
+          #   BRANCH="release/$IMAGE_VERSION"
             
                  
-            if [ $WORKFLOW_FILE = "deploy.yml" ] && [ $TRIGGER_WITH_APPROVE = "TRUE" ]; then
-              curl -s -X POST -H "Accept: application/vnd.github.v3+json" \
-              -H "Authorization: token ${{ secrets.PAT }}" \
-              https://api.github.com/repos/$REPOSITORY/actions/workflows/$WORKFLOW_FILE/dispatches \
-              -d '{"ref":"'$BRANCH'"}' > $REPOSITORY_LOG.log
-                 if [ -s $REPOSITORY_LOG.log ]; then
-                   echo "::error ::ERROR!!! Failed to trigger workflow $WORKFLOW_FILE for $REPOSITORY"
-                   echo
-                   echo "Error:"
-                   cat $REPOSITORY_LOG.log
-                 else
-                    echo "::notice ::INFO: Workflow $WORKFLOW_FILE for $REPOSITORY triggered successfully"
-                 fi
-            else
-              echo "::error ::ERROR!!! Invalid workflow file or variable trigger_with_approve other value than TRUE, workflow file expected here is deploy.yml"
-            fi
-           done
-           rm -rf *.log
-           sleep 90
+          #   if [ $WORKFLOW_FILE = "deploy.yml" ] && [ $TRIGGER_WITH_APPROVE = "TRUE" ]; then
+          #     curl -s -X POST -H "Accept: application/vnd.github.v3+json" \
+          #     -H "Authorization: token ${{ secrets.PAT }}" \
+          #     https://api.github.com/repos/$REPOSITORY/actions/workflows/$WORKFLOW_FILE/dispatches \
+          #     -d '{"ref":"'$BRANCH'"}' > $REPOSITORY_LOG.log
+          #        if [ -s $REPOSITORY_LOG.log ]; then
+          #          echo "::error ::ERROR!!! Failed to trigger workflow $WORKFLOW_FILE for $REPOSITORY"
+          #          echo
+          #          echo "Error:"
+          #          cat $REPOSITORY_LOG.log
+          #        else
+          #           echo "::notice ::INFO: Workflow $WORKFLOW_FILE for $REPOSITORY triggered successfully"
+          #        fi
+          #   else
+          #     echo "::error ::ERROR!!! Invalid workflow file or variable trigger_with_approve other value than TRUE, workflow file expected here is deploy.yml"
+          #   fi
+          #  done
+          #  rm -rf *.log
+          #  sleep 90
       shell: bash
 
-  trigger_multiple_approve_workflows:
-    runs-on: Ubuntu-latest
-    needs: trigger_multiple_workflows
+  # trigger_multiple_approve_workflows:
+  #   runs-on: Ubuntu-latest
+  #   needs: trigger_multiple_workflows
   
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-         token: ${{ secrets.PAT }}
+  #   steps:
+  #   - name: Checkout
+  #     uses: actions/checkout@v2
+  #     with:
+  #        token: ${{ secrets.PAT }}
 
-    - name: Automatic Deployment Approval
-      run: |
-          sh -x script.sh
+  #   - name: Automatic Deployment Approval
+  #     run: |
+          #sh -x script.sh
           #  for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
           #   _jq() {
           #     echo ${ROW} | base64 --decode | jq -r ${1}
@@ -137,6 +153,6 @@ jobs:
           #   fi  
            
           #  done
-      shell: bash
+      # shell: bash
 
 

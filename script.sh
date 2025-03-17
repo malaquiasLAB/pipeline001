@@ -16,7 +16,7 @@ for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
  _workflow_trigger_approve() {
     # get run_id
     RUN_ID=$(curl -s -L -H "Accept: application/vnd.github+json" \
-    -H "Authorization: token ${{ secrets.PAT }}" \
+    -H "Authorization: token $PAT" \
     https://api.github.com/repos/$REPOSITORY/actions/runs?branch=$BRANCH | \
     jq '.workflow_runs | map(select(.status == "waiting" and .head_branch == "'$BRANCH'" and .path == ".github/workflows/'$WORKFLOW_FILE'"))' | \
     jq .[0] | jq .id)
@@ -26,7 +26,7 @@ for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
     # get environment_ids
     ENVIRONMENT_ID=$(curl -s -L \
     -H "Accept: application/vnd.github.v3+json" \
-    -H "Authorization: token ${{ secrets.PAT }}" \
+    -H "Authorization: token $PAT" \
     https://api.github.com/repos/$REPOSITORY/environments | \
     jq '.environments | map(select(.name == "'$ENVIRONMENT'"))' | \
     jq .[] | jq .id)
@@ -36,17 +36,17 @@ for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
     echo "## trigger approve deployment"
     curl -s -L -X POST \
     -H "Accept: application/vnd.github+json" \
-    -H "Authorization: token ${{ secrets.PAT }}" \
+    -H "Authorization: token $PAT" \
     https://api.github.com/repos/$REPOSITORY/actions/runs/$RUN_ID/pending_deployments \
-    -d '{"environment_ids":['$ENVIRONMENT_ID'],"state":"approved","comment":"Auto aprovado pelo workflow automatizado!"}' | jq -r '.[] | .statuses_url' > statuses_url.txt
-    STATUSES_URL=$(cat statuses_url.txt)
+    -d '{"environment_ids":['$ENVIRONMENT_ID'],"state":"approved","comment":"Auto aprovado pelo workflow automatizado!"}' #| jq -r '.[] | .statuses_url' > statuses_url.txt
+    #STATUSES_URL=$(cat statuses_url.txt)
  }  
  _workflow_check_status(){             
     echo "## Check the status of the deployment"
     sleep 20
     DEPLOY_STATUS=$(curl -s -L \
     -H "Accept: application/vnd.github+json" \
-    -H "Authorization: token ${{ secrets.PAT }}" \
+    -H "Authorization: token $PAT" \
     $STATUSES_URL | jq -r '.[0].state')
       if [ "$DEPLOY_STATUS" == "in_progress" ]; then
       echo "::notice ::INFO: Deployment for $REPOSITORY workflow $WORKFLOW_FILE was approved!"
@@ -58,7 +58,7 @@ for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
 #  if [ "$WORKFLOW_FILE" = "deploy.yml" ] && [ "$TRIGGER_WITH_APPROVE" = "TRUE"] ; then
    echo "inicio da execucao!"
    _workflow_trigger_approve
-   echo
+   echo $PAT
    #_workflow_check_status
    exit 0
 #  else
