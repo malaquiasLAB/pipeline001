@@ -6,6 +6,8 @@ on:
       - develop
       - release/develop
       - main
+      - desenvolvimento
+      - producao
 
 jobs:
   trigger_multiple_workflows:
@@ -30,10 +32,11 @@ jobs:
               echo $ENVIRONMENT
           	;;
             *)
-              echo "Running commands for other branches"
+              echo "Running commands for other branchess"
               # Add your commands for other branches here
               ;;
           esac
+          #
           #  for ROW in $(cat deploy.json | jq -r '.[] | @base64'); do
           #   _jq() {
           #     echo ${ROW} | base64 --decode | jq -r ${1}
