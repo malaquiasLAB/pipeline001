@@ -17,6 +17,8 @@ jobs:
         steps:           
             - name: Echo test message
               run: |
+                  set -e
+                  set -x 
                   #echo "teste funcao 1"
                   func_teste1
 
