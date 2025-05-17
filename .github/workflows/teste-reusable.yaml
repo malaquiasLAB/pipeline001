@@ -4,9 +4,25 @@ on:
     workflow_dispatch:
 
 jobs:
-    call-reusable:
-        uses: malaquiasLAB/reusable-workflows/.github/workflows/reusable_001.yaml@main
-        with:
-            example-input: |
-                teste1.sh 
-                teste2.sh
+  trigger_reusable:
+     runs-on: ubuntu-latest
+    
+     steps:
+       - name: call-reusable
+         uses: malaquiasLAB/reusable-workflows/.github/workflows/reusable_001.yaml@main
+         with:
+           example-input: |
+             teste1.sh 
+             teste2.sh
+
+       - name: Echo test message
+         run: |
+              echo "teste funcao 1"
+              func_teste1
+
+              echo
+
+              echo "teste funcao 2"
+              func_teste2
+              
+             
