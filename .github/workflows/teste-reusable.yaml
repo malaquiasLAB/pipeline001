@@ -15,6 +15,9 @@ jobs:
         needs: call-reusable
         runs-on: ubuntu-latest
         steps:
+            - name: Checkout repository
+              uses: actions/checkout@v4
+            
             - name: Echo test message
               run: |
                   echo "teste funcao 1"
