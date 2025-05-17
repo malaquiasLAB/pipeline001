@@ -18,11 +18,11 @@ jobs:
             - name: Echo test message
               run: |
                   echo "teste funcao 1"
-                  # func_teste1
+                  func_teste1
 
                   echo
 
                   echo "teste funcao 2"
-                  # func_teste2
+                  func_teste2
               
              
